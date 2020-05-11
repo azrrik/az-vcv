@@ -159,14 +159,14 @@ struct Modulo : Module {
 		int length = (int) (
 			(params[LENGTH_ATV_PARAM].getValue() * inputs[LENGTH_CV_INPUT].getVoltage()) + params[LENGTH_PARAM].getValue()
 		);
-		length = clamp(length, 0, 99);
+		length = clamp(length, 0, PRIMES);
 		length = ((bool) params[PRIME_LENGTH_PARAM].getValue()) ? primes[length] : length;
 		lengthLabel->text = padZero(3, length);
 
 		int step = (int) (
 			(params[STEP_ATV_PARAM].getValue() * inputs[STEP_CV_INPUT].getVoltage()) + params[STEP_PARAM].getValue()
 		);
-		step = clamp(step, 0, 99);
+		step = clamp(step, 0, PRIMES);
 		step = ((bool) params[PRIME_STEP_PARAM].getValue()) ? primes[step] : step;
 		stepLabel->text = padZero(3, step);
 
