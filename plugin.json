@@ -9,14 +9,14 @@
   "authorUrl": "",
   "pluginUrl": "",
   "manualUrl": "",
-  "sourceUrl": "",
-  "donateUrl": "",
+  "sourceUrl": "https://github.com/azrrik/az-vcv",
+  "donateUrl": "https://paypal.me/azrrik",
   "changelogUrl": "",
   "modules": [
     {
       "slug": "modulo",
       "name": "modulo",
-      "description": "modulo sequencer / arpeggiator",
+      "description": "sequencer based on the modulo % operation",
       "tags": [
         "sequencer",
         "arpeggiator"
