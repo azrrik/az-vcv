@@ -101,42 +101,42 @@ struct Modulo : Module {
 
 	Modulo() {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(DB0_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(EB0_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(GB0_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(AB0_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(BB0_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(C0_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(D0_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(E0_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(F0_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(G0_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(A0_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(B0_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(DB1_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(EB1_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(GB1_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(AB1_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(BB1_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(C1_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(D1_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(E1_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(F1_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(G1_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(A1_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(B1_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(DB2_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(EB2_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(GB2_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(AB2_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(BB2_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(C2_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(D2_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(E2_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(F2_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(G2_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(A2_PARAM, 0.f, 1.f, 0.f, "");
-		configParam(B2_PARAM, 0.f, 1.f, 0.f, "");
+		configParam(DB0_PARAM, 0.f, 1.f, 0.f, "Db");
+		configParam(EB0_PARAM, 0.f, 1.f, 0.f, "Eb");
+		configParam(GB0_PARAM, 0.f, 1.f, 0.f, "Gb");
+		configParam(AB0_PARAM, 0.f, 1.f, 0.f, "Ab");
+		configParam(BB0_PARAM, 0.f, 1.f, 0.f, "Bb");
+		configParam(C0_PARAM, 0.f, 1.f, 0.f, "C");
+		configParam(D0_PARAM, 0.f, 1.f, 0.f, "D");
+		configParam(E0_PARAM, 0.f, 1.f, 0.f, "E");
+		configParam(F0_PARAM, 0.f, 1.f, 0.f, "F");
+		configParam(G0_PARAM, 0.f, 1.f, 0.f, "G");
+		configParam(A0_PARAM, 0.f, 1.f, 0.f, "A");
+		configParam(B0_PARAM, 0.f, 1.f, 0.f, "B");
+		configParam(DB1_PARAM, 0.f, 1.f, 0.f, "Db");
+		configParam(EB1_PARAM, 0.f, 1.f, 0.f, "Eb");
+		configParam(GB1_PARAM, 0.f, 1.f, 0.f, "Gb");
+		configParam(AB1_PARAM, 0.f, 1.f, 0.f, "Ab");
+		configParam(BB1_PARAM, 0.f, 1.f, 0.f, "Bb");
+		configParam(C1_PARAM, 0.f, 1.f, 0.f, "C");
+		configParam(D1_PARAM, 0.f, 1.f, 0.f, "D");
+		configParam(E1_PARAM, 0.f, 1.f, 0.f, "E");
+		configParam(F1_PARAM, 0.f, 1.f, 0.f, "F");
+		configParam(G1_PARAM, 0.f, 1.f, 0.f, "G");
+		configParam(A1_PARAM, 0.f, 1.f, 0.f, "A");
+		configParam(B1_PARAM, 0.f, 1.f, 0.f, "B");
+		configParam(DB2_PARAM, 0.f, 1.f, 0.f, "Db");
+		configParam(EB2_PARAM, 0.f, 1.f, 0.f, "Eb");
+		configParam(GB2_PARAM, 0.f, 1.f, 0.f, "Gb");
+		configParam(AB2_PARAM, 0.f, 1.f, 0.f, "Ab");
+		configParam(BB2_PARAM, 0.f, 1.f, 0.f, "Bb");
+		configParam(C2_PARAM, 0.f, 1.f, 0.f, "C");
+		configParam(D2_PARAM, 0.f, 1.f, 0.f, "D");
+		configParam(E2_PARAM, 0.f, 1.f, 0.f, "E");
+		configParam(F2_PARAM, 0.f, 1.f, 0.f, "F");
+		configParam(G2_PARAM, 0.f, 1.f, 0.f, "G");
+		configParam(A2_PARAM, 0.f, 1.f, 0.f, "A");
+		configParam(B2_PARAM, 0.f, 1.f, 0.f, "B");
 		configParam(LENGTH_ATV_PARAM, -10.f, 10.f, 0.f, "Length Attenuverter");
 		configParam(LENGTH_PARAM, 0.f, 33.f, 0.f, "Length");
 		configParam(STEP_ATV_PARAM, -10.f, 10.f, 0.f, "Step Attenuverter");
@@ -148,30 +148,26 @@ struct Modulo : Module {
 
 	static const int N = 36;
 	int notes[N];
+
 	dsp::SchmittTrigger trigger;
 	dsp::SchmittTrigger resetTrigger;
-	int current = 0;
 	Label *lengthLabel, *stepLabel;
 
-	bool primeLength = true;
-	bool primeStep = true;
+	int current = 0;
 
 	void process(const ProcessArgs& args) override {
 		int length = (int) (
 			(params[LENGTH_ATV_PARAM].getValue() * inputs[LENGTH_CV_INPUT].getVoltage()) + params[LENGTH_PARAM].getValue()
 		);
 		length = clamp(length, 0, 99);
-		primeLength = (bool) params[PRIME_LENGTH_PARAM].getValue();
-		length = primeLength ? primes[length] : length;
+		length = ((bool) params[PRIME_LENGTH_PARAM].getValue()) ? primes[length] : length;
 		lengthLabel->text = padZero(3, length);
-
 
 		int step = (int) (
 			(params[STEP_ATV_PARAM].getValue() * inputs[STEP_CV_INPUT].getVoltage()) + params[STEP_PARAM].getValue()
 		);
 		step = clamp(step, 0, 99);
-		primeStep = (bool) params[PRIME_STEP_PARAM].getValue();
-		step = primeStep ? primes[step] : step;
+		step = ((bool) params[PRIME_STEP_PARAM].getValue()) ? primes[step] : step;
 		stepLabel->text = padZero(3, step);
 
 		if (resetTrigger.process(inputs[RESET_INPUT].getVoltage())) {
