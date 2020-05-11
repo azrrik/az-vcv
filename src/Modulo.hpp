@@ -1,10 +1,12 @@
 #include "plugin.hpp"
-#include <iomanip>
 
 std::string padZero(int length, int i) {
-	std::ostringstream str;
-	str << std::setw(length) << std::setfill('0') << i;
-	return str.str();
+	if (i < 10)
+		return "00" + std::to_string(i);
+	else if (i < 100)
+		return "0" + std::to_string(i);
+	else
+		return std::to_string(i);
 }
 
 static const int PRIMES = 167;
@@ -36,7 +38,6 @@ struct BlackKey : app::SvgSwitch {
 		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BlackKeySelected.svg")));
 	}
 };
-
 
 struct SmallBlackKnob : Davies1900hKnob {
 	SmallBlackKnob() {

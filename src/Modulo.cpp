@@ -149,33 +149,42 @@ struct Modulo : Module {
 	static const int N = 36;
 	int notes[N];
 
-	dsp::SchmittTrigger trigger;
 	dsp::SchmittTrigger resetTrigger;
+	dsp::SchmittTrigger trigger;
+	
+	int processCV = 0;
 	Label *lengthLabel, *stepLabel;
 
 	int current = 0;
 
 	void process(const ProcessArgs& args) override {
-		int length = (int) (
-			(params[LENGTH_ATV_PARAM].getValue() * inputs[LENGTH_CV_INPUT].getVoltage()) + params[LENGTH_PARAM].getValue()
-		);
-		length = clamp(length, 0, PRIMES);
-		length = ((bool) params[PRIME_LENGTH_PARAM].getValue()) ? primes[length] : length;
-		lengthLabel->text = padZero(3, length);
-
-		int step = (int) (
-			(params[STEP_ATV_PARAM].getValue() * inputs[STEP_CV_INPUT].getVoltage()) + params[STEP_PARAM].getValue()
-		);
-		step = clamp(step, 0, PRIMES);
-		step = ((bool) params[PRIME_STEP_PARAM].getValue()) ? primes[step] : step;
-		stepLabel->text = padZero(3, step);
-
 		if (resetTrigger.process(inputs[RESET_INPUT].getVoltage())) {
 			current = 0;
 		}
 
-		if (trigger.process(inputs[CLOCK_INPUT].getVoltage())) {
- 
+		int length = 0;
+		int step = 0;
+		bool processTrigger = trigger.process(inputs[CLOCK_INPUT].getVoltage());
+
+		if (processTrigger || processCV++ > args.sampleRate / 600.0) {
+			processCV = 0;
+
+			length = (int) (
+				(params[LENGTH_ATV_PARAM].getValue() * inputs[LENGTH_CV_INPUT].getVoltage()) + params[LENGTH_PARAM].getValue()
+			);
+			length = clamp(length, 0, PRIMES);
+			length = ((bool) params[PRIME_LENGTH_PARAM].getValue()) ? primes[length] : length;
+			lengthLabel->text = padZero(3, length);
+
+			step = (int) (
+				(params[STEP_ATV_PARAM].getValue() * inputs[STEP_CV_INPUT].getVoltage()) + params[STEP_PARAM].getValue()
+			);
+			step = clamp(step, 0, PRIMES);
+			step = ((bool) params[PRIME_STEP_PARAM].getValue()) ? primes[step] : step;
+			stepLabel->text = padZero(3, step);
+		}
+
+		if (processTrigger) {
 			std::vector<int> activeNotes;			
 			for (int j = 0; j < N; j++) {
 				int note = params[j].getValue();
@@ -203,6 +212,7 @@ struct Modulo : Module {
 			}
 
 			outputs[OUT_OUTPUT].setVoltage(out / 12.f);
+			DEBUG("out=%i", out);
 		}		
 	}
 };
