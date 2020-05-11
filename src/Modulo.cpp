@@ -1,24 +1,7 @@
 #include "plugin.hpp"
-#include <iomanip>
-
-std::string padZero(int length, int i) {
-	std::ostringstream str;
-	str << std::setw(length) << std::setfill('0') << i;
-	return str.str();
-}
+#include "Modulo.hpp"
 
 struct Modulo : Module {
-	int primes[100] = {
-		  2,   3,   5,   7,  11,  13,  17,  19,  23,  29,  31,  37,  41,  43,
-		 47,  53,  59,  61,  67,  71,  73,  79,  83,  89,  97, 101, 103, 107, 
-		109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 
-		191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 
-		269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 
-		353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 
-		439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509, 521, 
-		523, 541
-	};
-
 	enum ParamIds {
 		C0_PARAM,
 		DB0_PARAM,
@@ -211,75 +194,11 @@ struct Modulo : Module {
 			int out = (activeNotes.size() != 0 && length != 0) ? 
 				activeNotes[((step * (current + shift)) % length) % activeNotes.size()] : 0;
 
-
-			// int out = 0;
-			// if (activeNotes.size() != 0 && length != 0) {
-			// 	out = activeNotes[((step * i) % length) % activeNotes.size()];
-				
-			// }
 			for (int k = 0; k < NUM_LIGHTS; k++) {
 				lights[k].setBrightness(0.f);
 			}
 
 			lights[out].setBrightness(1.f);
-
-
-							
-
-
-
-			// // DEBUG("WTF? %i %i %i", length, steps, i);
-
-			// notes[0] = (int) params[C0_PARAM].getValue();
-			// notes[1] = (int) params[DB0_PARAM].getValue();
-			// notes[2] = (int) params[D0_PARAM].getValue();
-			// notes[3] = (int) params[EB0_PARAM].getValue();
-			// notes[4] = (int) params[E0_PARAM].getValue();
-			// notes[5] = (int) params[F0_PARAM].getValue();
-			// notes[6] = (int) params[GB0_PARAM].getValue();
-			// notes[7] = (int) params[G0_PARAM].getValue();
-			// notes[8] = (int) params[AB0_PARAM].getValue();
-			// notes[9] = (int) params[A0_PARAM].getValue();
-			// notes[10] = (int) params[BB0_PARAM].getValue();
-			// notes[11] = (int) params[B0_PARAM].getValue();
-
-			// int p = step * i;
-			// // DEBUG("WTF2   %i = %i * %i", p, steps, i);
-
-
-			// int current = (length != 0) ? p % length : 0;
-			// // DEBUG("i=%i current=%i   %i %% %i", i, current, p, length);
-
-
-			// std::string t = "";
-			// std::vector<int> activeNotes;
-			// for (int j = 0; j < N; j++) {
-			// 	t += std::to_string(notes[j]);
-			// 	if (j != (N - 1))
-			// 		t += ", ";
-
-			// 	if (notes[j] == 1) {
-			// 		activeNotes.push_back(j);
-			// 	}
-			// }
-
-			// int activeNotesN = activeNotes.size();
-			
-			// int out = 0;
-			// if (activeNotesN != 0) {
-			// 	int index = current % activeNotesN;
-			// 	// int shift = current / activeNotesN;
-			// 	out = activeNotes[index];
-			// }
-
-			DEBUG("out=%i shift=%i", out, shift);
-			// DEBUG("activeNotesN=%i", activeNotesN);
-			// DEBUG("index=%i", index);
-			// DEBUG("shift=%i", shift);
-			// DEBUG("out=%i activeNotesN=%i index=%i shift=%i", out, activeNotesN, index, shift); 
-
-
-			// DEBUG("[%s] -> (%i, %i)", t.c_str(), length, steps);
 
 			if (current >= length - 1) {
 				current = 0;
@@ -292,85 +211,10 @@ struct Modulo : Module {
 	}
 };
 
-struct WhiteKey : app::SvgSwitch {
-	WhiteKey() {
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/WhiteKey.svg")));
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/WhiteKeySelected.svg")));
-	}
-};
-
-struct BlackKey : app::SvgSwitch {
-	BlackKey() {
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BlackKey.svg")));
-		addFrame(APP->window->loadSvg(asset::plugin(pluginInstance, "res/BlackKeySelected.svg")));
-	}
-};
-
-
-struct SmallWhiteKnob : Davies1900hKnob {
-	SmallWhiteKnob() {
-		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SmallWhite.svg")));
-	}
-};
-
-struct LargeWhiteKnob : Davies1900hKnob {
-	LargeWhiteKnob() {
-		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/LargeWhite.svg")));
-	}
-};
-
-struct BigLabel : Label {
-	BigLabel() {
-		fontSize = 30;
-		color = nvgRGB(233, 233, 233);
-	}
-};
-
-template <typename TBase>
-struct HiLight : TBase {
-	HiLight() {
-		this->box.size = app::mm2px(math::Vec(10, 10));;
-		this->bgColor = nvgRGBA(0, 0, 0, 100);
-		this->borderColor = nvgRGBA(0, 0, 0, 100);
-	}
-
-	void drawLight(const widget::Widget::DrawArgs& args) override {
-		nvgBeginPath(args.vg);
-		nvgRoundedRect(args.vg, 0, 0, this->box.size.x, this->box.size.y, 5.f);
-
-		// Background
-		if (this->bgColor.a > 0.0) {
-			nvgFillColor(args.vg, this->bgColor);
-			nvgFill(args.vg);
-		}
-
-		// Foreground
-		if (this->color.a > 0.0) {
-			nvgFillColor(args.vg, this->color);
-			nvgFill(args.vg);
-		}
-
-		// Border
-		if (this->borderColor.a > 0.0) {
-			nvgStrokeWidth(args.vg, 0.5);
-			nvgStrokeColor(args.vg, this->borderColor);
-			nvgStroke(args.vg);
-		}
-	}
-};
-
-struct CKSSInverse : app::SvgSwitch {
-	CKSSInverse() {
-		addFrame(APP->window->loadSvg(asset::system("res/ComponentLibrary/CKSS_1.svg")));
-		addFrame(APP->window->loadSvg(asset::system("res/ComponentLibrary/CKSS_0.svg")));
-	}
-};
-
-
 struct ModuloWidget : ModuleWidget {
 	ModuloWidget(Modulo* module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/modulo.svg")));
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Modulo.svg")));
 
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
@@ -451,10 +295,10 @@ struct ModuloWidget : ModuleWidget {
 		addParam(createParamCentered<WhiteKey>(mm2px(Vec(59.5, 71.0)), module, Modulo::A0_PARAM));
 		addParam(createParamCentered<WhiteKey>(mm2px(Vec(69.5, 71.0)), module, Modulo::B0_PARAM));
 
-		addParam(createParamCentered<SmallWhiteKnob>(mm2px(Vec(7.0, 82.5)), module, Modulo::LENGTH_ATV_PARAM));
-		addParam(createParamCentered<LargeWhiteKnob>(mm2px(Vec(22.0, 86.5)), module, Modulo::LENGTH_PARAM));
-		addParam(createParamCentered<SmallWhiteKnob>(mm2px(Vec(7.0, 102.5)), module, Modulo::STEP_ATV_PARAM));
-		addParam(createParamCentered<LargeWhiteKnob>(mm2px(Vec(22.0, 106.5)), module, Modulo::STEP_PARAM));
+		addParam(createParamCentered<SmallBlackKnob>(mm2px(Vec(7.0, 82.5)), module, Modulo::LENGTH_ATV_PARAM));
+		addParam(createParamCentered<LargeBlackKnob>(mm2px(Vec(22.0, 86.5)), module, Modulo::LENGTH_PARAM));
+		addParam(createParamCentered<SmallBlackKnob>(mm2px(Vec(7.0, 102.5)), module, Modulo::STEP_ATV_PARAM));
+		addParam(createParamCentered<LargeBlackKnob>(mm2px(Vec(22.0, 106.5)), module, Modulo::STEP_PARAM));
 
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(7.0, 90.5)), module, Modulo::LENGTH_CV_INPUT));
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(7.0, 110.5)), module, Modulo::STEP_CV_INPUT));
@@ -465,7 +309,7 @@ struct ModuloWidget : ModuleWidget {
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(72.5, 85.0)), module, Modulo::RESET_INPUT));
 		addInput(createInputCentered<PJ301MPort>(mm2px(Vec(85.0, 85.0)), module, Modulo::CLOCK_INPUT));
 
-		addParam(createParamCentered<SmallWhiteKnob>(mm2px(Vec(72.5, 105.0)), module, Modulo::SHIFT_PARAM));
+		addParam(createParamCentered<SmallBlackKnob>(mm2px(Vec(72.5, 105.0)), module, Modulo::SHIFT_PARAM));
 		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(85.0, 105.0)), module, Modulo::OUT_OUTPUT));
 
 		Label *lengthLabel = createWidget<BigLabel>(mm2px(Vec(30.0, 83.5)));
@@ -480,6 +324,5 @@ struct ModuloWidget : ModuleWidget {
 		}
 	}
 };
-
 
 Model* modelModulo = createModel<Modulo, ModuloWidget>("modulo");
