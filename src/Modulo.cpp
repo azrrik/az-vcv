@@ -211,8 +211,7 @@ struct Modulo : Module {
 				current++;
 			}
 
-			outputs[OUT_OUTPUT].setVoltage(out / 12.f);
-			DEBUG("out=%i", out);
+			outputs[OUT_OUTPUT].setVoltage((out / 12.f) - 1.f);
 		}		
 	}
 };
