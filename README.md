@@ -4,16 +4,16 @@ vcv rack plugins by az
 
 # modulo
 ## usage
--patch a clock or trigger to clock input
--pick some notes by clicking the keys
--pick your favorite prime (or non-prime) numbers for length and step
--patch out to the v/oct input of a sound source
+- patch a clock or trigger to clock input
+- pick some notes by clicking the keys
+- pick your favorite prime (or non-prime) numbers for length and step
+- patch out to the v/oct input of a sound source
 
 ## notes
--the sequence of notes played will be more "interesting" (less repeats) if length and step are different primes
--length and step have CV inputs with attenuverters next to them
--shift shifts the starting note of the sequence
--reset resets the sequence back the the starting note
+- the sequence of notes played will be more "interesting" (less repeats) if length and step are different primes
+- length and step have CV inputs with attenuverters next to them
+- shift shifts the starting note of the sequence
+- reset resets the sequence back the the starting note
 
 
 ## idea
