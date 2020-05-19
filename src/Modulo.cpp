@@ -138,9 +138,9 @@ struct Modulo : Module {
 		configParam(A2_PARAM, 0.f, 1.f, 0.f, "A");
 		configParam(B2_PARAM, 0.f, 1.f, 0.f, "B");
 		configParam(LENGTH_ATV_PARAM, -10.f, 10.f, 0.f, "Length Attenuverter");
-		configParam(LENGTH_PARAM, 0.f, 33.f, 0.f, "Length");
+		configParam(LENGTH_PARAM, 0.f, 33.f, 4.f, "Length");
 		configParam(STEP_ATV_PARAM, -10.f, 10.f, 0.f, "Step Attenuverter");
-		configParam(STEP_PARAM, 0.f, 33.f, 0.f, "Step");
+		configParam(STEP_PARAM, 0.f, 33.f, 5.f, "Step");
 		configParam(PRIME_STEP_PARAM, 0.f, 1.f, 1.f, "Only Primes");
 		configParam(PRIME_LENGTH_PARAM, 0.f, 1.f, 1.f, "Only Primes");
 		configParam(SHIFT_PARAM, 0.f, 1.f, 0.f, "Shift");

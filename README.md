@@ -10,7 +10,7 @@ vcv rack plugins by az
 - patch out to the v/oct input of a sound source
 
 ## notes
-- the sequence of notes played will be more "interesting" (less repeats) if length and step are different primes
+- the sequence of notes played will be more "interesting" (fewer repeats) if length, step and the number of selected notes are different primes
 - length and step have CV inputs with attenuverters next to them
 - shift shifts the starting note of the sequence
 - reset resets the sequence back the the starting note
