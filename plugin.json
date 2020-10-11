@@ -21,6 +21,14 @@
         "sequencer",
         "arpeggiator"
       ]
+    },
+    {
+      "slug": "Blank",
+      "name": "Blank",
+      "description": "blank canvas",
+      "tags": [
+        "visual"
+      ]
     }
   ]
 }
