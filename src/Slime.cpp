@@ -1,17 +1,11 @@
 #include "Slime.hpp"
 #include "Util.hpp"
 
-#include <iostream>
 #include <memory>
 #include <vector>
 #include <cstdint>
 
 using namespace std;
-
-vector<unique_ptr<Agent>> agents;
-
-vector<vector<RBG>> trailMap;
-vector<vector<RBG>> trailMapTemp;
 
 Slime::Slime(int totalAgents, float redWeight, float blueWeight, float greenWeight) {
 	for (int i = 0; i < totalAgents; i++) {
@@ -90,7 +84,7 @@ void Slime::renderTrailMap(const rack::widget::Widget::DrawArgs& args, rack::mat
 
 void Slime::step(float sensorAngle, int sensorOffset, float diffusionFactor, float retainmentFactor) {
 	random_shuffle(agents.begin(), agents.end());
-
+	// move forward
 	for (auto&& agent : agents) {
 		agent->x = modIndex(agent->x + cos(agent->heading), GRID_WIDTH);
 		agent->y = modIndex(agent->y + sin(agent->heading), GRID_HEIGHT);
@@ -134,7 +128,7 @@ void Slime::step(float sensorAngle, int sensorOffset, float diffusionFactor, flo
 			agent->heading -= sensorAngle;
 		}
 	}
-
+	// TODO : param?
 	int length = 1;
 	int totalArea = ((2 * length) + 1) * ((2 * length) + 1);
 	for (int x = 0; x < GRID_WIDTH; x++) {
@@ -166,18 +160,33 @@ void Slime::jitter(float force) {
 	}
 }
 
+float Slime::getDecimalPart(float number) {
+	double nonDecimal;
+    return std::modf(number, &nonDecimal);
+}
 
-RBG Slime::getKernel(int x, int y, int size) {
-	double r = 0.f;
-	double b = 0.f;
-	double g = 0.f;
-	for (int i = x - size; i <= x + size; i++) {
-		for (int j = y - size; j <= y + size; j++) {
-			r += trailMap[modIndex(i, GRID_WIDTH)][modIndex(j, GRID_HEIGHT)].r;
-			b += trailMap[modIndex(i, GRID_WIDTH)][modIndex(j, GRID_HEIGHT)].b;
-			g += trailMap[modIndex(i, GRID_WIDTH)][modIndex(j, GRID_HEIGHT)].g;
+Modulation Slime::getModulation() {
+	float mod3 = 0.f;
+	float mod5 = 0.f;
+	float mod7 = 0.f;
+
+	for (int x = 0; x < GRID_WIDTH; ++x) {
+		for (int y = 0; y < GRID_HEIGHT; ++y) {
+			RBG rbg = trailMap[x][y];
+			if (x % 3 == 0 || y % 3 == 0) {
+				mod3 += rbg.avg();
+			} else if (x % 5 == 0 || y % 5 == 0) {
+				mod5 += rbg.avg();
+			} else if (x % 7 == 0 || y % 7 == 0) {
+				mod7 += rbg.avg();
+			}
 		}
 	}
-	double total = ((2. * size) + 1.) * ((2. * size) + 1.);
-	return RBG((r / total), (b / total), (g / total));
+
+	// drop digits before the decimal and scale to [0,10]
+	mod3 = getDecimalPart(mod3) * 10.f;
+	mod5 = getDecimalPart(mod5) * 10.f;
+	mod7 = getDecimalPart(mod7) * 10.f;
+
+	return Modulation(mod3, mod5, mod7);
 }

@@ -11,16 +11,6 @@ int toInt(float value) {
 }
 
 int modIndex(int i, unsigned max) {
-	// if (i < 0 || (unsigned)i >= max) {
-	// 	int mod = i % (int) max;
-	// 	// % operation returns negative values
-	//     if (mod < 0) {
-	//         mod += max;
-	//     }
-	// 	return mod;
-	// } else {
-	// 	return i;
-	// }
 	if (i < 0) {
 		i += max;
 	} else if ((unsigned)i >= max) {
