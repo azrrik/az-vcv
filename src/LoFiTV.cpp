@@ -3,7 +3,7 @@
 #include "Slime.hpp"
 #include "Util.hpp"
 
-struct Blank : Module {
+struct LoFiTV : Module {
 	enum ParamIds {
 		TOTAL_AGENTS,
 		SENSOR_ANGLE,
@@ -50,7 +50,7 @@ struct Blank : Module {
 	dsp::BooleanTrigger resetTap;
 	FramebufferWidget* fb;
 
-	Blank() : slime(100, 0.f, 0.7f, 0.9f) {
+	LoFiTV() : slime(100, 0.f, 0.7f, 0.9f) {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		configParam(TOTAL_AGENTS, 0.f, 5000.f, 1000.f, "Total Agents");
 		configParam(SENSOR_ANGLE, 0.f, 1.f, 0.2477f, "Sensor Angle");
@@ -63,8 +63,6 @@ struct Blank : Module {
 		configParam(FORCE, 0.f, 25.0f, 13.7f, "Jitter Force");
 	}
 
-	~Blank() {}
-	
 	void process(const ProcessArgs& args) override {
 		bool someoneIsDirty = false;
 		if (clock.process(inputs[CLOCK].getVoltage())) {
@@ -135,7 +133,7 @@ struct Blank : Module {
 
 
 struct CanvasWidget : Widget {
-	Blank* module;
+	LoFiTV* module;
 
 	void draw(const DrawArgs& args) override {
 		if (module) {
@@ -171,39 +169,39 @@ struct PJ301MDarkPort : app::SvgPort {
 	}
 };
 
-struct BlankWidget : ModuleWidget {
-	BlankWidget(Blank* module) {
+struct LoFiTVWidget : ModuleWidget {
+	LoFiTVWidget(LoFiTV* module) {
 		setModule(module);
-		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/Blank.svg")));
+		setPanel(APP->window->loadSvg(asset::plugin(pluginInstance, "res/LoFiTV.svg")));
 		// ↯ ⧗
-		addInput(createInputCentered<PJ301MPort>(Vec(410, 21), module, Blank::JITTER));
-		addInput(createInputCentered<PJ301MPort>(Vec(450, 21), module, Blank::CLOCK));
+		addInput(createInputCentered<PJ301MPort>(Vec(410, 21), module, LoFiTV::JITTER));
+		addInput(createInputCentered<PJ301MPort>(Vec(450, 21), module, LoFiTV::CLOCK));
 		// !
-		addParam(createParamCentered<RoundSmallWhiteKnob>(Vec(421, 73), module, Blank::FORCE));
-		addInput(createInputCentered<PJ301MPort>(Vec(451, 73), module, Blank::FORCE_CV));
+		addParam(createParamCentered<RoundSmallWhiteKnob>(Vec(421, 73), module, LoFiTV::FORCE));
+		addInput(createInputCentered<PJ301MPort>(Vec(451, 73), module, LoFiTV::FORCE_CV));
 		// ↻
-		addParam(createParamCentered<LEDBezel>(Vec(430, 110), module, Blank::RESET_TAP));
-		addChild(createLightCentered<LEDBezelLight<GreenLight>>(Vec(430, 110), module, Blank::RESET_LIGHT));
-		addInput(createInputCentered<PJ301MPort>(Vec(457, 110), module, Blank::RESET));
+		addParam(createParamCentered<LEDBezel>(Vec(430, 110), module, LoFiTV::RESET_TAP));
+		addChild(createLightCentered<LEDBezelLight<GreenLight>>(Vec(430, 110), module, LoFiTV::RESET_LIGHT));
+		addInput(createInputCentered<PJ301MPort>(Vec(457, 110), module, LoFiTV::RESET));
 		// #
-		addParam(createParamCentered<RoundSmallWhiteKnob>(Vec(430, 141), module, Blank::TOTAL_AGENTS));
-		addInput(createInputCentered<PJ301MPort>(Vec(457, 141), module, Blank::TOTAL_AGENTS_CV));
+		addParam(createParamCentered<RoundSmallWhiteKnob>(Vec(430, 141), module, LoFiTV::TOTAL_AGENTS));
+		addInput(createInputCentered<PJ301MPort>(Vec(457, 141), module, LoFiTV::TOTAL_AGENTS_CV));
 		
-		addParam(createParamCentered<RoundSmallRedKnob>(Vec(403, 209), module, Blank::RED_WEIGHT));
-		addParam(createParamCentered<RoundSmallBlueKnob>(Vec(430, 209), module, Blank::BLUE_WEIGHT));
-		addParam(createParamCentered<RoundSmallGreenKnob>(Vec(457, 209), module, Blank::GREEN_WEIGHT));
-		addInput(createInputCentered<PJ301MPort>(Vec(403, 181), module, Blank::RED_CV));
-		addInput(createInputCentered<PJ301MPort>(Vec(430, 181), module, Blank::BLUE_CV));
-		addInput(createInputCentered<PJ301MPort>(Vec(457, 181), module, Blank::GREEN_CV));
+		addParam(createParamCentered<RoundSmallRedKnob>(Vec(403, 209), module, LoFiTV::RED_WEIGHT));
+		addParam(createParamCentered<RoundSmallBlueKnob>(Vec(430, 209), module, LoFiTV::BLUE_WEIGHT));
+		addParam(createParamCentered<RoundSmallGreenKnob>(Vec(457, 209), module, LoFiTV::GREEN_WEIGHT));
+		addInput(createInputCentered<PJ301MPort>(Vec(403, 181), module, LoFiTV::RED_CV));
+		addInput(createInputCentered<PJ301MPort>(Vec(430, 181), module, LoFiTV::BLUE_CV));
+		addInput(createInputCentered<PJ301MPort>(Vec(457, 181), module, LoFiTV::GREEN_CV));
 		// ✢ ▒ ∠ ↥
-		addParam(createParamCentered<RoundSmallWhiteKnob>(Vec(430, 244), module, Blank::DIFFUSION_FACTOR));
-		addParam(createParamCentered<RoundSmallWhiteKnob>(Vec(430, 273.5), module, Blank::RETAINMENT_FACTOR));
-		addParam(createParamCentered<RoundSmallWhiteKnob>(Vec(430, 303), module, Blank::SENSOR_ANGLE));
-		addParam(createParamCentered<RoundSmallWhiteKnob>(Vec(430, 332.5), module, Blank::SENSOR_OFFSET));
-		addInput(createInputCentered<PJ301MPort>(Vec(457, 244), module, Blank::DIFFUSION_FACTOR_CV));
-		addInput(createInputCentered<PJ301MPort>(Vec(457, 273.5), module, Blank::RETAINMENT_FACTOR_CV));
-		addInput(createInputCentered<PJ301MPort>(Vec(457, 303), module, Blank::SENSOR_ANGLE_CV));
-		addInput(createInputCentered<PJ301MPort>(Vec(457, 332.5), module, Blank::SENSOR_OFFSET_CV));
+		addParam(createParamCentered<RoundSmallWhiteKnob>(Vec(430, 244), module, LoFiTV::DIFFUSION_FACTOR));
+		addParam(createParamCentered<RoundSmallWhiteKnob>(Vec(430, 273.5), module, LoFiTV::RETAINMENT_FACTOR));
+		addParam(createParamCentered<RoundSmallWhiteKnob>(Vec(430, 303), module, LoFiTV::SENSOR_ANGLE));
+		addParam(createParamCentered<RoundSmallWhiteKnob>(Vec(430, 332.5), module, LoFiTV::SENSOR_OFFSET));
+		addInput(createInputCentered<PJ301MPort>(Vec(457, 244), module, LoFiTV::DIFFUSION_FACTOR_CV));
+		addInput(createInputCentered<PJ301MPort>(Vec(457, 273.5), module, LoFiTV::RETAINMENT_FACTOR_CV));
+		addInput(createInputCentered<PJ301MPort>(Vec(457, 303), module, LoFiTV::SENSOR_ANGLE_CV));
+		addInput(createInputCentered<PJ301MPort>(Vec(457, 332.5), module, LoFiTV::SENSOR_OFFSET_CV));
 
 		CanvasWidget* canvas = new CanvasWidget();
 		canvas->box = Rect(Vec(0, 0), Vec(380, 380));
@@ -217,11 +215,11 @@ struct BlankWidget : ModuleWidget {
 			module->fb = fb;
 		}
 
-		addOutput(createOutputCentered<PJ301MDarkPort>(Vec(403, 365), module, Blank::MOD3));
-		addOutput(createOutputCentered<PJ301MDarkPort>(Vec(430, 365), module, Blank::MOD5));
-		addOutput(createOutputCentered<PJ301MDarkPort>(Vec(457, 365), module, Blank::MOD7));
+		addOutput(createOutputCentered<PJ301MDarkPort>(Vec(403, 365), module, LoFiTV::MOD3));
+		addOutput(createOutputCentered<PJ301MDarkPort>(Vec(430, 365), module, LoFiTV::MOD5));
+		addOutput(createOutputCentered<PJ301MDarkPort>(Vec(457, 365), module, LoFiTV::MOD7));
 	}
 };
 
 
-Model* modelBlank = createModel<Blank, BlankWidget>("Blank");
+Model* modelLoFiTV = createModel<LoFiTV, LoFiTVWidget>("LoFiTV");
