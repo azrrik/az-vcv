@@ -71,7 +71,8 @@ Note that if any of the CV inputs are patched, the corresponding knob are simply
 - ↯ jitter : moves each agent a random amount determined by:
 - ! force : maximum distance that an agent moves when jitter receives a pulse.
 
-- ↻ reset : resets the simulation.  Randomly generates agents, their position and color.  The following parameters only affect the simulation when it is reset:
+- ↻ reset : resets the simulation.  Randomly generates agents, their position and color. 
+The following parameters only affect the simulation when it is reset:
 - \# number of agents : How many agents spawn when the simulation is reset.
 - red knob : maximum amount of red in each agent.
 - blue knob : maximum amount of blue in each agent.
