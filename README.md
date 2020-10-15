@@ -70,18 +70,18 @@ Note that if any of the CV inputs are patched, the corresponding knobs are simpl
 - ⧗ clock : advances the simulation one tick per clock pulse.
 - ↯ jitter : moves each agent a random amount determined by:
 - ! force : maximum distance that an agent moves when jitter receives a pulse.  
-
+  
 - ↻ reset : resets the simulation.  Randomly generates agents, their position and color.  
-
-The following parameters only affect the simulation when it is reset:  
+  
+  The following parameters only affect the simulation when it is reset:  
 - \# number of agents : How many agents spawn when the simulation is reset.
 - red knob : maximum amount of red in each agent.
 - blue knob : maximum amount of blue in each agent.
 - green knob : maximum amount of green in each agent.  
-
+  
 - ✢ diffusion factor : amount of slime in the current pixel that spreads to the adjacent 8 pixels.
 - ▒ retainment factor : how fast the slime in the current pixel fades.
 - ∠ sensor angle : angle (left / right) that the agent senses.
 - ↥ sensor distance : distance that the agent senses.  
-
+  
 - 3 unlabeled outputs : modulation output (-10v to +10v) based on the averages of select pixels.  This is "random" stepped voltage as it is only updated once per step (once per clock pulse).
