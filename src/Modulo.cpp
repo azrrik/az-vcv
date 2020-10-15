@@ -166,7 +166,7 @@ struct Modulo : Module {
 		int step = 0;
 		bool processTrigger = trigger.process(inputs[CLOCK_INPUT].getVoltage());
 
-		if (processTrigger || processCV++ > args.sampleRate / 600.0) {
+		if (processTrigger || processCV++ > args.sampleRate / 600.f) {
 			processCV = 0;
 
 			length = (int) (

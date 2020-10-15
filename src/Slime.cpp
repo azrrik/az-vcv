@@ -38,8 +38,8 @@ void Slime::reset(int totalAgents, float redWeight, float blueWeight, float gree
 	}
 
 	// trialMap and trailMapTemp have the same dimensions
-	for (uint i = 0; i < trailMap.size(); ++i) {
-		for(uint j = 0; j < trailMap[i].size(); ++j) {
+	for (size_t i = 0; i < trailMap.size(); ++i) {
+		for(size_t j = 0; j < trailMap[i].size(); ++j) {
 			trailMap[i][j].zero();
 			trailMapTemp[i][j].zero();
 		}

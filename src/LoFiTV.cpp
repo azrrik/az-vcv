@@ -51,7 +51,7 @@ struct LoFiTV : Module {
 	dsp::SchmittTrigger jitter;
 	dsp::BooleanTrigger resetTap;
 	FramebufferWidget* fb;
-
+	int processCV = 0;
 
 	LoFiTV() : slime(100, 0.f, 0.7f, 0.9f) {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
@@ -68,8 +68,10 @@ struct LoFiTV : Module {
 
 
 	void process(const ProcessArgs& args) override {
+		bool process = (++processCV > (args.sampleRate / 60.f));
+
 		bool someoneIsDirty = false;
-		if (clock.process(inputs[CLOCK].getVoltage())) {
+		if (clock.process(inputs[CLOCK].getVoltage()) && process) {
 			float sensorAngle = 0.5f * M_PI * params[SENSOR_ANGLE].getValue();
 			float sensorOffset = 20 * params[SENSOR_OFFSET].getValue();
 			float diffusionFactor = params[DIFFUSION_FACTOR].getValue();
@@ -94,7 +96,7 @@ struct LoFiTV : Module {
 		bool tap = params[RESET_TAP].getValue() > 0.f;
 		lights[RESET_LIGHT].setBrightness(tap);
 
-		if (reset.process(inputs[RESET].getVoltage()) || resetTap.process(tap)) {
+		if ((reset.process(inputs[RESET].getVoltage()) || resetTap.process(tap)) && process) {
 			float totalAgents = params[TOTAL_AGENTS].getValue();
 			float redWeight = params[RED_WEIGHT].getValue();
 			float blueWeight = params[BLUE_WEIGHT].getValue();
@@ -116,7 +118,7 @@ struct LoFiTV : Module {
 			someoneIsDirty = true;
 		}
 
-		if (jitter.process(inputs[JITTER].getVoltage())) {
+		if (jitter.process(inputs[JITTER].getVoltage()) && process) {
 			float force = params[FORCE].getValue();
 			if (inputs[FORCE_CV].isConnected()) {
 				force = (inputs[FORCE_CV].getVoltage() + 10.f) / 20.f * 25.f;
@@ -125,7 +127,8 @@ struct LoFiTV : Module {
 			someoneIsDirty = true;
 		}
 
-		if (someoneIsDirty) { 
+		if (someoneIsDirty) {
+			processCV = 0;
 			fb->dirty = true;
 			Modulation modulation = slime.getModulation(); 
 			outputs[MOD3].setVoltage(modulation.mod3);
