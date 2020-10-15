@@ -1,7 +1,9 @@
 #include "plugin.hpp"
 #include "widget/Widget.hpp"
+#include "LoFiTV.hpp"
 #include "Slime.hpp"
 #include "Util.hpp"
+
 
 struct LoFiTV : Module {
 	enum ParamIds {
@@ -50,6 +52,7 @@ struct LoFiTV : Module {
 	dsp::BooleanTrigger resetTap;
 	FramebufferWidget* fb;
 
+
 	LoFiTV() : slime(100, 0.f, 0.7f, 0.9f) {
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		configParam(TOTAL_AGENTS, 0.f, 5000.f, 1000.f, "Total Agents");
@@ -62,6 +65,7 @@ struct LoFiTV : Module {
 		configParam(RETAINMENT_FACTOR, 0.f, 1.f, 0.523f, "Retainment Factor");
 		configParam(FORCE, 0.f, 25.0f, 13.7f, "Jitter Force");
 	}
+
 
 	void process(const ProcessArgs& args) override {
 		bool someoneIsDirty = false;
@@ -123,10 +127,10 @@ struct LoFiTV : Module {
 
 		if (someoneIsDirty) { 
 			fb->dirty = true;
-			Modulation average = slime.getModulation(); 
-			outputs[MOD3].setVoltage(average.mod3);
-			outputs[MOD5].setVoltage(average.mod5);
-			outputs[MOD7].setVoltage(average.mod7);
+			Modulation modulation = slime.getModulation(); 
+			outputs[MOD3].setVoltage(modulation.mod3);
+			outputs[MOD5].setVoltage(modulation.mod5);
+			outputs[MOD7].setVoltage(modulation.mod7);
 		}
 	}
 };
@@ -142,32 +146,6 @@ struct CanvasWidget : Widget {
 	}
 };
 
-struct RoundSmallWhiteKnob : RoundKnob {
-	RoundSmallWhiteKnob() {
-		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SmallWhiteKnob.svg")));
-	}
-};
-struct RoundSmallRedKnob : RoundKnob {
-	RoundSmallRedKnob() {
-		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SmallRedKnob.svg")));
-	}
-};
-struct RoundSmallGreenKnob : RoundKnob {
-	RoundSmallGreenKnob() {
-		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SmallGreenKnob.svg")));
-	}
-};
-struct RoundSmallBlueKnob : RoundKnob {
-	RoundSmallBlueKnob() {
-		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/SmallBlueKnob.svg")));
-	}
-};
-
-struct PJ301MDarkPort : app::SvgPort {
-	PJ301MDarkPort() {
-		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/PJ301MDark.svg")));
-	}
-};
 
 struct LoFiTVWidget : ModuleWidget {
 	LoFiTVWidget(LoFiTV* module) {

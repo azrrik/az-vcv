@@ -64,7 +64,7 @@ The order (2, 4, 1, 3, 0) is used to step through the selected notes.
 ## idea
 The LoFiTV module is a slime mold simulation.  It was inspired by the work of [Sage Jenson](https://sagejenson.com/physarum) and [Jeff Jones](https://uwe-repository.worktribe.com/output/980579).  The basic idea is that there are a number of agents that move forward each step (each tick of the clock ⧗ results in a single step) and after moving, they leave behind a slime trail.  Then, each agent senses in front, to left and to the right and turns towards the direction with the highest concentration of the slime trail.  The sensor distance and angle are controlled via ∠ and ↥.  Finally, the slime trail diffuses into the 8 adjacent pixels based on the diffusion factor ✢ and each pixel fades based on the retainment factor ▒.
 
-Note that if any of the CV inputs are patched, the corresponding knob are simply ignored.  Thus, to get good results, the signals used for modulation may need to be scaled, inverted, offset, etc.
+Note that if any of the CV inputs are patched, the corresponding knobs are simply ignored.  Thus, the signals used for modulation may need to be scaled, inverted, offset, etc.
 
 ## parameters
 - ⧗ clock : advances the simulation one tick per clock pulse.
