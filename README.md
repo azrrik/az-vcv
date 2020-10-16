@@ -52,6 +52,9 @@ The order (2, 4, 1, 3, 0) is used to step through the selected notes.
 
 # LoFiTV
 
+[basic example with only clock inputs patched](https://www.youtube.com/watch?v=PZ-u0m1pVvU)
+[example with all modulation inputs patched](https://www.youtube.com/watch?v=vt5HC5QyXV8)
+
 ## usage
 - Patch a clock or trigger to clock input:  **⧗**.
 - Wiggle the knobs on the bottom:  **✢ ▒ ∠ ↥**.
