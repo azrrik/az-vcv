@@ -139,13 +139,14 @@ struct LoFiTV : Module {
 };
 
 
-struct CanvasWidget : Widget {
+struct CanvasWidget : ModuleLightWidget {
 	LoFiTV* module;
 
 	void draw(const DrawArgs& args) override {
 		if (module) {
 			module->slime.renderTrailMap(args, this->box);
 		}
+		LightWidget::draw(args);
 	}
 };
 
