@@ -96,7 +96,7 @@ struct LoFiTV : Module {
 		bool tap = params[RESET_TAP].getValue() > 0.f;
 		lights[RESET_LIGHT].setBrightness(tap);
 
-		if ((reset.process(inputs[RESET].getVoltage()) || resetTap.process(tap)) && process) {
+		if ((reset.process(inputs[RESET].getVoltage()) && process) || resetTap.process(tap)) {
 			float totalAgents = params[TOTAL_AGENTS].getValue();
 			float redWeight = params[RED_WEIGHT].getValue();
 			float blueWeight = params[BLUE_WEIGHT].getValue();
