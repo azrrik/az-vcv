@@ -1,5 +1,5 @@
 # az-vcv
-vcv rack plugins by az
+[vcv rack](https://vcvrack.com/) plugins by az
 
 
 # modulo
