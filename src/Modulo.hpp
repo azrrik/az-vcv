@@ -61,7 +61,7 @@ struct BigLabel : Label {
 template <typename TBase>
 struct HiLight : TBase {
 	HiLight() {
-		this->box.size = app::mm2px(math::Vec(10, 10));;
+		this->box.size = window::mm2px(math::Vec(10, 10));;
 		this->bgColor = nvgRGBA(0, 0, 0, 100);
 		this->borderColor = nvgRGBA(0, 0, 0, 100);
 	}

@@ -64,6 +64,7 @@ void Slime::renderAgents(const rack::widget::Widget::DrawArgs& args) {
 
 
 void Slime::renderTrailMap(const rack::widget::Widget::DrawArgs& args, rack::math::Rect& box) {
+	nvgSave(args.vg);
 	for (int j = 0; j < GRID_HEIGHT; j++) {
 		for (int i = 0; i < GRID_WIDTH; i++) {
 			nvgBeginPath(args.vg);
@@ -79,6 +80,7 @@ void Slime::renderTrailMap(const rack::widget::Widget::DrawArgs& args, rack::mat
 			nvgFill(args.vg);				
 		}
 	}
+	nvgRestore(args.vg);
 }
 
 

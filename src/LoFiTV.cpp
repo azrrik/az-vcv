@@ -50,7 +50,6 @@ struct LoFiTV : Module {
 	dsp::SchmittTrigger reset;
 	dsp::SchmittTrigger jitter;
 	dsp::BooleanTrigger resetTap;
-	FramebufferWidget* fb;
 	int processCV = 0;
 
 	LoFiTV() : slime(100, 0.f, 0.7f, 0.9f) {
@@ -61,7 +60,7 @@ struct LoFiTV : Module {
 		configParam(RED_WEIGHT, 0.f, 1.f, 0.1f, "Red Weight");
 		configParam(BLUE_WEIGHT, 0.f, 1.f, 0.67f, "Blue Weight");
 		configParam(GREEN_WEIGHT, 0.f, 1.f, 0.9f, "Green Weight");
-		configParam(DIFFUSION_FACTOR, 0.f, 1.f, 0.413f, "Diffusion Factor");
+		configParam(DIFFUSION_FACTOR, 0.f, 1.f, 0.573f, "Diffusion Factor");
 		configParam(RETAINMENT_FACTOR, 0.f, 1.f, 0.523f, "Retainment Factor");
 		configParam(FORCE, 0.f, 25.0f, 13.7f, "Jitter Force");
 	}
@@ -129,7 +128,6 @@ struct LoFiTV : Module {
 
 		if (someoneIsDirty) {
 			processCV = 0;
-			fb->dirty = true;
 			Modulation modulation = slime.getModulation(); 
 			outputs[MOD3].setVoltage(modulation.mod3);
 			outputs[MOD5].setVoltage(modulation.mod5);
@@ -139,14 +137,16 @@ struct LoFiTV : Module {
 };
 
 
-struct CanvasWidget : ModuleLightWidget {
+struct CanvasWidget : Widget {
 	LoFiTV* module;
 
-	void draw(const DrawArgs& args) override {
-		if (module) {
-			module->slime.renderTrailMap(args, this->box);
+	void drawLayer(const DrawArgs& args, int layer) override {
+		if (layer == 1) {
+			if (module) {
+				module->slime.renderTrailMap(args, this->box);
+			}
 		}
-		LightWidget::draw(args);
+		Widget::drawLayer(args, layer);
 	}
 };
 
@@ -184,19 +184,12 @@ struct LoFiTVWidget : ModuleWidget {
 		addInput(createInputCentered<PJ301MPort>(Vec(457, 273.5), module, LoFiTV::RETAINMENT_FACTOR_CV));
 		addInput(createInputCentered<PJ301MPort>(Vec(457, 303), module, LoFiTV::SENSOR_ANGLE_CV));
 		addInput(createInputCentered<PJ301MPort>(Vec(457, 332.5), module, LoFiTV::SENSOR_OFFSET_CV));
-
-		CanvasWidget* canvas = new CanvasWidget();
-		canvas->box = Rect(Vec(0, 0), Vec(380, 380));
-		canvas->module = module;
-
-		FramebufferWidget* fb = new FramebufferWidget();
-		fb->box = Rect(Vec(0, 0), Vec(380, 380));
-		fb->addChild(canvas);
-		addChild(fb);
-		if (module) {
-			module->fb = fb;
+		{
+			CanvasWidget* canvas = new CanvasWidget();
+			canvas->box = Rect(Vec(0, 0), Vec(380, 380));
+			canvas->module = module;
+			addChild(canvas);
 		}
-
 		addOutput(createOutputCentered<PJ301MDarkPort>(Vec(403, 365), module, LoFiTV::MOD3));
 		addOutput(createOutputCentered<PJ301MDarkPort>(Vec(430, 365), module, LoFiTV::MOD5));
 		addOutput(createOutputCentered<PJ301MDarkPort>(Vec(457, 365), module, LoFiTV::MOD7));
