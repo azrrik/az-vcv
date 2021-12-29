@@ -152,9 +152,8 @@ struct Modulo : Module {
 	dsp::SchmittTrigger resetTrigger;
 	dsp::SchmittTrigger trigger;
 	
-	int processCV = 0;
-	Label *lengthLabel, *stepLabel;
-
+	int length = 0;
+	int step = 0;
 	int current = 0;
 
 	void process(const ProcessArgs& args) override {
@@ -162,27 +161,20 @@ struct Modulo : Module {
 			current = 0;
 		}
 
-		int length = 0;
-		int step = 0;
 		bool processTrigger = trigger.process(inputs[CLOCK_INPUT].getVoltage());
 
-		if (processTrigger || processCV++ > args.sampleRate / 600.f) {
-			processCV = 0;
+		length = (int) (
+			(params[LENGTH_ATV_PARAM].getValue() * inputs[LENGTH_CV_INPUT].getVoltage()) + params[LENGTH_PARAM].getValue()
+		);
+		length = clamp(length, 0, PRIMES);
+		length = ((bool) params[PRIME_LENGTH_PARAM].getValue()) ? primes[length] : length;
 
-			length = (int) (
-				(params[LENGTH_ATV_PARAM].getValue() * inputs[LENGTH_CV_INPUT].getVoltage()) + params[LENGTH_PARAM].getValue()
-			);
-			length = clamp(length, 0, PRIMES);
-			length = ((bool) params[PRIME_LENGTH_PARAM].getValue()) ? primes[length] : length;
-			lengthLabel->text = padZero(3, length);
+		step = (int) (
+			(params[STEP_ATV_PARAM].getValue() * inputs[STEP_CV_INPUT].getVoltage()) + params[STEP_PARAM].getValue()
+		);
+		step = clamp(step, 0, PRIMES);
+		step = ((bool) params[PRIME_STEP_PARAM].getValue()) ? primes[step] : step;
 
-			step = (int) (
-				(params[STEP_ATV_PARAM].getValue() * inputs[STEP_CV_INPUT].getVoltage()) + params[STEP_PARAM].getValue()
-			);
-			step = clamp(step, 0, PRIMES);
-			step = ((bool) params[PRIME_STEP_PARAM].getValue()) ? primes[step] : step;
-			stepLabel->text = padZero(3, step);
-		}
 
 		if (processTrigger) {
 			std::vector<int> activeNotes;			
@@ -216,6 +208,22 @@ struct Modulo : Module {
 	}
 };
 
+struct LengthDisplay : ParamDisplay {
+	Modulo* module;
+	void step() override {
+		int length = module ? module->length : 0;
+		text = string::f("%d", length);
+	}
+};
+
+struct StepDisplay : ParamDisplay {
+	Modulo* module;
+	void step() override {
+		int step = module ? module->step : 0;
+		text = string::f("%d", step);
+	}
+};
+
 struct ModuloWidget : ModuleWidget {
 	ModuloWidget(Modulo* module) {
 		setModule(module);
@@ -226,42 +234,42 @@ struct ModuloWidget : ModuleWidget {
 		addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(14.5, 12.5)), module, Modulo::DB2_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(24.5, 12.5)), module, Modulo::EB2_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(44.5, 12.5)), module, Modulo::GB2_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(54.5, 12.5)), module, Modulo::AB2_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(64.5, 12.5)), module, Modulo::BB2_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(9.5, 23.0)), module, Modulo::C2_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(19.5, 23.0)), module, Modulo::D2_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(29.5, 23.0)), module, Modulo::E2_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(39.5, 23.0)), module, Modulo::F2_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(49.5, 23.0)), module, Modulo::G2_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(59.5, 23.0)), module, Modulo::A2_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(69.5, 23.0)), module, Modulo::B2_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(14.5, 36.5)), module, Modulo::DB1_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(24.5, 36.5)), module, Modulo::EB1_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(44.5, 36.5)), module, Modulo::GB1_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(54.5, 36.5)), module, Modulo::AB1_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(64.5, 36.5)), module, Modulo::BB1_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(9.5, 47.0)), module, Modulo::C1_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(19.5, 47.0)), module, Modulo::D1_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(29.5, 47.0)), module, Modulo::E1_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(39.5, 47.0)), module, Modulo::F1_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(49.5, 47.0)), module, Modulo::G1_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(59.5, 47.0)), module, Modulo::A1_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(69.5, 47.0)), module, Modulo::B1_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(14.5, 60.5)), module, Modulo::DB0_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(24.5, 60.5)), module, Modulo::EB0_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(44.5, 60.5)), module, Modulo::GB0_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(54.5, 60.5)), module, Modulo::AB0_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(64.5, 60.5)), module, Modulo::BB0_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(9.5, 71.0)), module, Modulo::C0_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(19.5, 71.0)), module, Modulo::D0_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(29.5, 71.0)), module, Modulo::E0_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(39.5, 71.0)), module, Modulo::F0_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(49.5, 71.0)), module, Modulo::G0_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(59.5, 71.0)), module, Modulo::A0_LIGHT));
-		addChild(createLightCentered<HiLight<BlueLight>>(mm2px(Vec(69.5, 71.0)), module, Modulo::B0_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(14.5, 12.5)), module, Modulo::DB2_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(24.5, 12.5)), module, Modulo::EB2_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(44.5, 12.5)), module, Modulo::GB2_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(54.5, 12.5)), module, Modulo::AB2_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(64.5, 12.5)), module, Modulo::BB2_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(9.5, 23.0)), module, Modulo::C2_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(19.5, 23.0)), module, Modulo::D2_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(29.5, 23.0)), module, Modulo::E2_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(39.5, 23.0)), module, Modulo::F2_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(49.5, 23.0)), module, Modulo::G2_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(59.5, 23.0)), module, Modulo::A2_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(69.5, 23.0)), module, Modulo::B2_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(14.5, 36.5)), module, Modulo::DB1_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(24.5, 36.5)), module, Modulo::EB1_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(44.5, 36.5)), module, Modulo::GB1_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(54.5, 36.5)), module, Modulo::AB1_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(64.5, 36.5)), module, Modulo::BB1_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(9.5, 47.0)), module, Modulo::C1_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(19.5, 47.0)), module, Modulo::D1_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(29.5, 47.0)), module, Modulo::E1_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(39.5, 47.0)), module, Modulo::F1_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(49.5, 47.0)), module, Modulo::G1_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(59.5, 47.0)), module, Modulo::A1_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(69.5, 47.0)), module, Modulo::B1_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(14.5, 60.5)), module, Modulo::DB0_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(24.5, 60.5)), module, Modulo::EB0_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(44.5, 60.5)), module, Modulo::GB0_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(54.5, 60.5)), module, Modulo::AB0_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(64.5, 60.5)), module, Modulo::BB0_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(9.5, 71.0)), module, Modulo::C0_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(19.5, 71.0)), module, Modulo::D0_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(29.5, 71.0)), module, Modulo::E0_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(39.5, 71.0)), module, Modulo::F0_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(49.5, 71.0)), module, Modulo::G0_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(59.5, 71.0)), module, Modulo::A0_LIGHT));
+		addChild(createLightCentered<HiLight<GreenLight>>(mm2px(Vec(69.5, 71.0)), module, Modulo::B0_LIGHT));
 
 		addParam(createParamCentered<BlackKey>(mm2px(Vec(14.5, 12.5)), module, Modulo::DB2_PARAM));
 		addParam(createParamCentered<BlackKey>(mm2px(Vec(24.5, 12.5)), module, Modulo::EB2_PARAM));
@@ -317,16 +325,13 @@ struct ModuloWidget : ModuleWidget {
 		addParam(createParamCentered<SmallBlackKnob>(mm2px(Vec(72.5, 105.0)), module, Modulo::SHIFT_PARAM));
 		addOutput(createOutputCentered<PJ301MPort>(mm2px(Vec(85.0, 105.0)), module, Modulo::OUT_OUTPUT));
 
-		Label *lengthLabel = createWidget<BigLabel>(mm2px(Vec(30.0, 83.5)));
-		addChild(lengthLabel);
+		LengthDisplay* lengthDisplay = createWidget<LengthDisplay>(mm2px(Vec(41.75, 81.5)));
+		lengthDisplay->module = module;
+		addChild(lengthDisplay);
 
-		Label *stepLabel = createWidget<BigLabel>(mm2px(Vec(30.0, 103.5)));
-		addChild(stepLabel);
-
-		if (module) {
-			 module->lengthLabel = lengthLabel;
-			 module->stepLabel = stepLabel;
-		}
+		StepDisplay* stepDisplay = createWidget<StepDisplay>(mm2px(Vec(41.75, 101.5)));
+		stepDisplay->module = module;
+		addChild(stepDisplay);
 	}
 };
 

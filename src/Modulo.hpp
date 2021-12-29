@@ -1,14 +1,5 @@
 #include "plugin.hpp"
 
-std::string padZero(int length, int i) {
-	if (i < 10)
-		return "00" + std::to_string(i);
-	else if (i < 100)
-		return "0" + std::to_string(i);
-	else
-		return std::to_string(i);
-}
-
 static const int PRIMES = 167;
 int primes[PRIMES + 1] = {
 	   2,    3,    5,    7,   11,   13,   17,   19,   23,   29,   31,   37,   41,   43, 
@@ -48,13 +39,6 @@ struct SmallBlackKnob : Davies1900hKnob {
 struct LargeBlackKnob : Davies1900hKnob {
 	LargeBlackKnob() {
 		setSvg(APP->window->loadSvg(asset::plugin(pluginInstance, "res/LargeBlackKnob.svg")));
-	}
-};
-
-struct BigLabel : Label {
-	BigLabel() {
-		fontSize = 30;
-		color = nvgRGB(233, 233, 233);
 	}
 };
 
